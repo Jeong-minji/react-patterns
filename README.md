@@ -53,5 +53,5 @@ props: {
 }
 
 // VAC
-{showButton && isOwner && <button/>}
+{showButton && <button/>}
 ```
