@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# react-patterns
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Study about Advanced React Patterns
 
-## Available Scripts
+## VAC Pattern
 
-In the project directory, you can run:
+- VAC(View Asset Component): 화면에 렌더링되는 JSX + Style을 관리하는 컴포넌트
+- VAC 패턴: View 컴포넌트에서 JSX 영역을 VAC로 따로 분리해서 개발하는 설계 방법.<br/>
+  JSX 영역을 분리하기 위해서는 View에서 **JSX에 사용되는 값들을 Props Object로 추상화** 해야함.
 
-### `npm start`
+  ![alt text](/public/images/vac.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+  <br/>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### VAC Component
 
-### `npm test`
+VAC 컴포넌트는 stateless한 컴포넌트이므로 스스로 상태를 변경하거나, 외부의 데이터를 받아 오거나, 비즈니스 로직을 갖지 않음. 오직 props로 받아온 내용을 그대로 전달하기만 함.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Why Use This Pattern
 
-### `npm run build`
+1. 역할에 따른 작업 공간의 분리
+   - UI 개발자는 VAC 컴포넌트 부분만, FE 개발자는 View 부분만 수정하면 됨 -> Conflict 감소
+2. 렌더링에 직관적인 상태 관리
+   - Props Object에서 모든 속성을 정의하여 관리함
+   - View는 JSX에 어떻게 상태가 적용되는지, JSX는 어떤 조건이 내려오는지 파악할 필요가 없음
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Props Naming
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Props의 네이밍은 데이터 친화적 형태 보다는 렌더링 직관적 형태를 사용하는 것이 좋음. <br/>
+ex) `isMin`, `isMax` => `disableDecrease`, `disableIncrease`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+또한, 여러 정보를 개별적으로 전달하는 것 보다 조합된 결과를 전달하는 것이 좋음. <br/>
 
-### `npm run eject`
+[ from ]
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+// View
+props: {
+    isLogin: true
+    isOwner: false
+}
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+// VAC
+{isLogin && isOwner && <button/>}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+[ to ]
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+// View
+props: {
+    showButton: isLogin && isOwner
+}
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+// VAC
+{showButton && isOwner && <button/>}
+```
